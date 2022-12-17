@@ -20,7 +20,7 @@ public class Main {
     static void model(){
 
         myEmail = "pin11kurochkin@gmail.com";
-        pass = "xnpg aqrt ukfa qflw";
+        pass = "";
         recipientEmail = "kuroochkin2003@mail.ru";
         subject = "Напоминание";
         text = "Вам пришел текстовый файл в другом сообщении.";
