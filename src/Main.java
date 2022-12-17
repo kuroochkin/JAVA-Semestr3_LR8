@@ -16,14 +16,16 @@ public class Main {
     private static String subject; // Тема письма
     private static String text; // Тело письма
 
-    static void modelDefineAllData(){
+    // Метод заполнения полей класса
+    static void model(){
 
         myEmail = "pin11kurochkin@gmail.com";
-        pass = "";
-        recipientEmail = "pin11kurochkin@gmail.com";
-        subject = "Дюхе";
-        text = "Сагу братик";
+        pass = "xnpg aqrt ukfa qflw";
+        recipientEmail = "kuroochkin2003@mail.ru";
+        subject = "Напоминание";
+        text = "Вам пришел текстовый файл в другом сообщении.";
 
+        // Настройки подключения к Google Account
         settings = new Properties();
         settings.put("mail.smtp.auth", "true");
         settings.put("mail.smtp.starttls.enable", "true");
@@ -34,20 +36,20 @@ public class Main {
 
     static void view(String msg){
         System.out.println(msg);
-    }
+    } // Метод для удобства представления
 
     static void controller(){
         try {
-            modelDefineAllData();
-            view("Preparing");
+            model(); // Подключаем модель, с которой будем работать
+            view("Данные загружены");
+            // Отправляем наши данные в метод SendMail() и отправляем первое сообщение
             Email.SendEmail(recipientEmail, myEmail, pass, settings, subject, text);
-            view("Done");
         }catch (Exception e){
             view("Error in controller(): " +e.getMessage());
         }
 
 
-        modelDefineAllData();
+        model();
         Session session = Session.getInstance(settings, new Authenticator() { //получаем данны об аутентификации
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -55,19 +57,19 @@ public class Main {
             }
         });
         try {
-            //составное сообщение
+            // Создаем составное сообщение
             MimeMessage message = new MimeMessage(session);
 
-            //от кому тема
+            // Настраиваем свою почту и адресат
             message.setFrom(new InternetAddress(myEmail));
             message.addRecipient(Message.RecipientType.TO,new InternetAddress(recipientEmail));
-            message.setSubject("Это от Владоса!");
+            message.setSubject("Важная информация!");
 
-            //тело сообщение
+            // Тело сообщения
             BodyPart messageBodyPart = new MimeBodyPart();
             messageBodyPart.setText("Обязательно прочитай текстовый файл!");
 
-            //файл
+            // Файл, который отправляем
             BodyPart filePart = new MimeBodyPart();
             String filename = "test.txt";
             DataSource source = new FileDataSource(filename);
@@ -81,17 +83,15 @@ public class Main {
 
             message.setContent(multipart);
 
+            // Отправляем сообщение с файлом
             Transport.send(message);
-            System.out.println("finish");
+            view("Данные отправлены");
         } catch (MessagingException e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) throws Exception {
-        Properties props = new Properties();
-        Preloader settings = new Preloader("Settings.ini", props);
-        view("Hello, "+props.getProperty("Login")+"! It is Emailsander");
         controller();
     }
 }
